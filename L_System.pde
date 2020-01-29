@@ -9,9 +9,9 @@
 // rules: (A → AB), (B → A)
 
 float angle,cangle;
-String axiom = "F";
+String axiom = "X";
 String sentence = axiom;
-float flen = 168 / 4, slen = flen * 0.618033988749855;
+float flen,slen;
 float cflen,cslen;
 color bgcolor = 255, linecolor = 0;
 Rule[] rules;
@@ -20,12 +20,15 @@ Rule[] rules;
 void setup(){
   size(400,400);
   
+  flen = height * 0.618033988749855 * 0.618033988749855 * 0.618033988749855 * 0.618033988749855; 
+  slen = flen * 0.618033988749855;
+  
   rules = new Rule[3];
-  rules[0] = new Rule('F', "++L[-----F]---F[L]++S");
-  rules[1] = new Rule('S', "F-");
+  rules[0] = new Rule('X', "F+[[L]-L]-F[-FX]+X");
+  rules[1] = new Rule('F', "FS");
   rules[2] = new Rule('L', "");
   
-  angle = radians(9.88854381999768);
+  angle = radians(25);
   background(bgcolor);
   println(axiom);
   turtle();
@@ -54,7 +57,10 @@ class Rule {
 }
 
 void generate(){
-  //len *= 0.5;
+  //angle *= 0.618033988749855;
+  flen *= 0.718033988749855;
+  slen *= 0.718033988749855;
+  
   String next_sentence = "";
   for (int i = 0; i < sentence.length(); i++){
     char current = sentence.charAt(i);
@@ -80,7 +86,7 @@ void turtle(){
   resetMatrix(); 
   translate(width/2, height);
   stroke(linecolor);
-  strokeWeight(8);
+  strokeWeight(5);
   
   cangle = angle;
   cflen = flen;
@@ -104,14 +110,14 @@ void turtle(){
       rotate(-angle);
     } else if (current == '[') {
       pushMatrix();
-      cangle *= 0.618033988749855;
-      cflen *= 0.618033988749855;
-      cslen *= 0.618033988749855;
+      //cangle *= 0.618033988749855;
+      cflen *= 0.918033988749855;
+      cslen *= 0.918033988749855;
     } else if (current == ']') {
       popMatrix();
-      cangle /= 0.618033988749855;
-      cflen /= 0.618033988749855;
-      cslen /= 0.618033988749855;
+      //cangle /= 0.618033988749855;
+      cflen /= 0.918033988749855;
+      cslen /= 0.918033988749855;
     }
     
     
