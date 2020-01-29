@@ -13,7 +13,12 @@ String axiom = "X";
 String sentence = axiom;
 float flen,slen;
 float cflen,cslen;
-color bgcolor = 255, linecolor = 0;
+//float lenLevelScale=0.763932022500133;
+float lenLevelScale=0.954101966249599;
+float weightLevelScale=0.954101966249599;
+float lenGenerationScale=0.618033988749855;
+color bgColor = 255, lineColor = 0;
+float lineWeight = 8, clineWeight;
 Rule[] rules;
 
 
@@ -24,12 +29,12 @@ void setup(){
   slen = flen * 0.618033988749855;
   
   rules = new Rule[3];
-  rules[0] = new Rule('X', "F+[[L]-L]-F[-FX]+X");
-  rules[1] = new Rule('F', "FS");
-  rules[2] = new Rule('L', "");
+  rules[0] = new Rule('X', "F+[[LX]-L]-S[-FX]+X+F--X");
+  rules[1] = new Rule('F', "FF");
+  rules[2] = new Rule('L', "LS");
   
   angle = radians(25);
-  background(bgcolor);
+  background(bgColor);
   println(axiom);
   turtle();
 }
@@ -57,9 +62,9 @@ class Rule {
 }
 
 void generate(){
-  //angle *= 0.618033988749855;
-  flen *= 0.718033988749855;
-  slen *= 0.718033988749855;
+  //angle *= lenGenerationScale;
+  flen *= lenGenerationScale;
+  slen *= lenGenerationScale;
   
   String next_sentence = "";
   for (int i = 0; i < sentence.length(); i++){
@@ -82,11 +87,12 @@ void generate(){
 
 
 void turtle(){
-  background(bgcolor);
+  background(bgColor);
   resetMatrix(); 
   translate(width/2, height);
-  stroke(linecolor);
-  strokeWeight(5);
+  stroke(lineColor);
+  
+  clineWeight = lineWeight;
   
   cangle = angle;
   cflen = flen;
@@ -94,6 +100,8 @@ void turtle(){
   
   for (int i = 0; i < sentence.length(); i++) {
     char current = sentence.charAt(i);
+
+    strokeWeight(clineWeight);
 
     if (current == 'F') {
       line(0, 0, 0, -cflen);
@@ -105,19 +113,21 @@ void turtle(){
       line(0, 0, 0, -cslen*1.618033988749855);
       translate(0, -cslen*1.618033988749855);
     } else if (current == '+') {
-      rotate(angle);
+      rotate(cangle);
     } else if (current == '-') {
-      rotate(-angle);
+      rotate(-cangle);
     } else if (current == '[') {
       pushMatrix();
-      //cangle *= 0.618033988749855;
-      cflen *= 0.918033988749855;
-      cslen *= 0.918033988749855;
+      clineWeight *= weightLevelScale;
+      cangle = radians(degrees(cangle)*lenLevelScale);
+      cflen *= lenLevelScale;
+      cslen *= lenLevelScale;
     } else if (current == ']') {
       popMatrix();
-      //cangle /= 0.618033988749855;
-      cflen /= 0.918033988749855;
-      cslen /= 0.918033988749855;
+      clineWeight /= weightLevelScale;
+      cangle = radians(degrees(cangle)/lenLevelScale);
+      cflen /= lenLevelScale;
+      cslen /= lenLevelScale;
     }
     
     
